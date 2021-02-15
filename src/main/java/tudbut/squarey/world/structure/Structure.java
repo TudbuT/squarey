@@ -60,7 +60,7 @@ public class Structure {
                     int lx = x + baseLoc.getX(), ly = y + baseLoc.getY();
                     try {
                         world[lx / 16].blocks[lx % 16][ly] = types[x][y].create(new Vector2i(lx, ly));
-                        if(Client.getInstance() != null && Client.getInstance().viewEntity instanceof EntityPlayer && isUsingTool) {
+                        if(Client.getInstance() != null && Client.getInstance().viewEntity instanceof EntityPlayer && Client.getInstance().multiplayer && isUsingTool) {
                             ((EntityPlayer) Client.getInstance().viewEntity).clientConnection.writeBlockUpdate(new Vector2i(lx, ly));
                         }
                     } catch (ArrayIndexOutOfBoundsException | PBIC.PBICException.PBICWriteException ignored) {
