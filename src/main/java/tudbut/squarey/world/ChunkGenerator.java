@@ -2,13 +2,11 @@ package tudbut.squarey.world;
 
 import tudbut.logger.LoggerSink;
 import tudbut.obj.Vector2i;
-import tudbut.squarey.client.Client;
 import tudbut.squarey.world.block.Block;
 import tudbut.squarey.world.block.BlockType;
 import tudbut.squarey.world.structure.Structure;
 import tudbut.squarey.world.structure.StructureTree;
 import tudbut.tools.NoiseGenerator;
-import tudbut.tools.StringTools;
 
 import java.util.Random;
 
@@ -67,7 +65,7 @@ public class ChunkGenerator {
             if(random.nextInt(20 - i) == 0) {
                 for (int y = 511; y > 0; y--) {
                     if(chunks[x / 16].blocks[x % 16][y].type == BlockType.GRASS) {
-                        tree.generate(chunks, new Vector2i(x, y));
+                        tree.generate(chunks, new Vector2i(x, y), false);
                         break;
                     }
                 }

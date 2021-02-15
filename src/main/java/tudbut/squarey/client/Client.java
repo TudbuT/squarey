@@ -161,7 +161,7 @@ public class Client {
                         }
                     }
                     if (Keyboard.isKeyDown(KeyEvent.VK_G)) {
-                        new StructureTree().generate(world.chunks, lookingAtBlock);
+                        new StructureTree().generate(world.chunks, lookingAtBlock, false);
                     }
                     if (Mouse.isKeyDown(1)) {
                         try {

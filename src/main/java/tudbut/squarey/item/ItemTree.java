@@ -13,12 +13,12 @@ public class ItemTree extends Item {
         super(ItemType.TREE);
     }
     
-    private static StructureTree tree = new StructureTree();
+    private static final StructureTree tree = new StructureTree();
     
     @Override
     public boolean place(Vector2i pos, World world) {
         if(world.getBlock(pos.getX(), pos.getY() + 1).type == BlockType.AIR && world.getBlock(pos.getX(), pos.getY()).type == BlockType.GRASS) {
-            tree.generate(world.chunks, pos);
+            tree.generate(world.chunks, pos, true);
             return true;
         }
         return false;

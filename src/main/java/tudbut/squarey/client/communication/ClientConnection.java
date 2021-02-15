@@ -47,6 +47,7 @@ public class ClientConnection {
                     }
                 }
             } catch (Throwable throwable) {
+                throwable.printStackTrace();
                 System.exit(0);
             }
         }, "Client receive thread").start();

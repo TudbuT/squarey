@@ -1,9 +1,11 @@
 package tudbut.squarey.world.structure;
 
+import tudbut.net.ic.PBIC;
 import tudbut.obj.Vector2i;
+import tudbut.squarey.client.Client;
 import tudbut.squarey.world.Chunk;
-import tudbut.squarey.world.World;
 import tudbut.squarey.world.block.BlockType;
+import tudbut.squarey.world.entity.EntityPlayer;
 
 public class Structure {
     
@@ -49,7 +51,7 @@ public class Structure {
         return blocks.clone();
     }
     
-    public void generate(Chunk[] world, Vector2i baseLoc) {
+    public void generate(Chunk[] world, Vector2i baseLoc, boolean isUsingTool) {
         baseLoc = baseLoc.clone().add(relativeBase.clone().negate());
         BlockType[][] types = build();
         for (int x = 0; x < types.length; x++) {
@@ -58,7 +60,10 @@ public class Structure {
                     int lx = x + baseLoc.getX(), ly = y + baseLoc.getY();
                     try {
                         world[lx / 16].blocks[lx % 16][ly] = types[x][y].create(new Vector2i(lx, ly));
-                    } catch (ArrayIndexOutOfBoundsException ignored) {
+                        if(Client.getInstance() != null && Client.getInstance().viewEntity instanceof EntityPlayer && isUsingTool) {
+                            ((EntityPlayer) Client.getInstance().viewEntity).clientConnection.writeBlockUpdate(new Vector2i(lx, ly));
+                        }
+                    } catch (ArrayIndexOutOfBoundsException | PBIC.PBICException.PBICWriteException ignored) {
                     
                     }
                 }
