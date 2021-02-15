@@ -50,7 +50,7 @@ public class Structure {
     }
     
     public void generate(Chunk[] world, Vector2i baseLoc) {
-        baseLoc = baseLoc.clone().add(relativeBase.negate());
+        baseLoc = baseLoc.clone().add(relativeBase.clone().negate());
         BlockType[][] types = build();
         for (int x = 0; x < types.length; x++) {
             for (int y = 0; y < types[x].length; y++) {

@@ -68,6 +68,7 @@ public class ChunkGenerator {
                 for (int y = 511; y > 0; y--) {
                     if(chunks[x / 16].blocks[x % 16][y].type == BlockType.GRASS) {
                         tree.generate(chunks, new Vector2i(x, y));
+                        chunks[x / 16].blocks[x % 16][y] = new Block(BlockType.END, new Vector2i(x, y));
                         break;
                     }
                 }
