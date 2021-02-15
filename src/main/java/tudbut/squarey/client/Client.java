@@ -45,6 +45,7 @@ public class Client {
     public Vector2i renderOffset;
     public Vector2i lastMousePos;
     public int lastMouseWheelPos = 0;
+    public boolean multiplayer;
     
     public Entity viewEntity;
     public Vector2d lookingAt;
@@ -52,6 +53,7 @@ public class Client {
     
     public Client(String server, int port) {
         if(server != null) {
+            multiplayer = true;
             try {
                 PBIC.Client client = new PBIC.Client(server, port);
                 viewEntity = new ClientPlayer(new Vector2d(256 * 16,300));
@@ -66,6 +68,7 @@ public class Client {
             }
         }
         else {
+            multiplayer = false;
             if (!new File("world").exists()) {
                 world = new World();
                 logger.info("Generating");
