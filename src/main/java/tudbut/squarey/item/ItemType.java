@@ -5,6 +5,7 @@ import tudbut.squarey.world.block.BlockType;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
 public enum ItemType {
@@ -17,6 +18,7 @@ public enum ItemType {
     PLANKS("planks", Item.class, BlockType.PLANKS),
     LOG("log", Item.class, BlockType.LOG),
     LEAVES("leaves", Item.class, BlockType.LEAVES),
+    TREE("tree", ItemTree.class, null),
     
     
     ;
@@ -25,6 +27,15 @@ public enum ItemType {
     private Image texture;
     public final Class<? extends Item> type;
     public final BlockType blockType;
+    
+    public Item create() {
+        try {
+            return type.getDeclaredConstructor(ItemType.class).newInstance(this);
+        }
+        catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            return null;
+        }
+    }
     
     public Image getTexture() {
         return texture;

@@ -16,6 +16,7 @@ import tudbut.squarey.client.communication.ClientConnection;
 import tudbut.squarey.client.rendering.Renderer;
 import tudbut.squarey.item.Item;
 import tudbut.squarey.item.ItemStack;
+import tudbut.squarey.item.ItemTree;
 import tudbut.squarey.item.ItemType;
 import tudbut.squarey.world.World;
 import tudbut.squarey.world.block.BlockType;
@@ -118,6 +119,7 @@ public class Client {
                     viewEntity.inventory.items[5][0] = new ItemStack(new Item(ItemType.PLANKS), 1);
                     viewEntity.inventory.items[6][0] = new ItemStack(new Item(ItemType.LOG), 1);
                     viewEntity.inventory.items[7][0] = new ItemStack(new Item(ItemType.LEAVES), 1);
+                    viewEntity.inventory.items[0][1] = new ItemStack(new ItemTree(), 1);
     
                     int mouseWheelPos = Mouse.getMouseWheelPos();
                     int scroll = -(mouseWheelPos - lastMouseWheelPos);
