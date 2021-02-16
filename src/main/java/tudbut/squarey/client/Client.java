@@ -128,7 +128,7 @@ public class Client {
                     int scroll = -(mouseWheelPos - lastMouseWheelPos);
                     viewEntity.inventory.roll(!Keyboard.isKeyDown(KeyEvent.VK_SHIFT) ? scroll : 0, Keyboard.isKeyDown(KeyEvent.VK_SHIFT) ? scroll : 0);
                     lastMouseWheelPos = mouseWheelPos;
-                    viewEntity.noGravity = true;
+                    viewEntity.noGravity = false;
     
                     if (Keyboard.isKeyDown(KeyEvent.VK_A)) {
                         if (world.getBlock(viewEntity.pos.getX(), viewEntity.pos.getY()).type.climbable)
