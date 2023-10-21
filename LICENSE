@@ -1,6 +1,9 @@
-General Viral TudbuT License
+Strong TudbuT License
 
 Copyright (c) 2023 Daniel H.
+
+Go to https://github.com/TudbuT/tudbut-license for a summary of this 
+license's intentions.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -17,11 +20,11 @@ subject to the following conditions:
 
 3. When a significant modification is made and an executable, binary, or 
    similar source-code-derived artifact of this modified Software is 
-   published, the modified source code of that Software must be published 
-   under the same license as the original. Other software which builds upon
-   this Software without modifying any existing part of it is included, so
-   its source ALSO needs to be published under the same license as this 
-   Software.
+   created and published or run in such a way that multiple people can use it,
+   the modified source code of that Software must be published under the same
+   license as the original. Other software which builds upon this Software 
+   without modifying any existing part of it is excluded, so its source does 
+   NOT need to be published.
 
 4. Any improvement in or addition of speed, functionality, ease-of-use, 
    usability, or otherwise, is a significant modification.
@@ -30,11 +33,11 @@ subject to the following conditions:
    NOT an application by itself, or is marketed as such, and an application, 
    that is a piece of Software which the end-user directly interacts with in 
    order to do some task, or one which is run in a stand-alone fashion in 
-   order to provide a service, is published which uses a binary or similar 
-   source-code-derived artifact of a significantly modified copy of this 
-   library, then that copy's modified source code must be published under 
-   the same license as the original, along with the source code of the 
-   application which uses it.
+   order to provide a service, is published or run in a way that multiple 
+   people can use it, which uses a binary or similar source-code-derived 
+   artifact of a significantly modified copy of this library, then that copy's
+   modified source code must be published under the same license as the 
+   original.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
