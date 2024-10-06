@@ -114,103 +114,106 @@ public class Client {
                 
                 if (viewEntity instanceof ClientPlayer) {
     
-                    viewEntity.inventory.items[0][0] = new ItemStack(new Item(ItemType.STONE), 1);
-                    viewEntity.inventory.items[1][0] = new ItemStack(new Item(ItemType.WALL), 1);
-                    viewEntity.inventory.items[2][0] = new ItemStack(new Item(ItemType.DIRT), 1);
-                    viewEntity.inventory.items[3][0] = new ItemStack(new Item(ItemType.GRASS), 1);
-                    viewEntity.inventory.items[4][0] = new ItemStack(new Item(ItemType.LADDER), 1);
-                    viewEntity.inventory.items[5][0] = new ItemStack(new Item(ItemType.PLANKS), 1);
-                    viewEntity.inventory.items[6][0] = new ItemStack(new Item(ItemType.LOG), 1);
-                    viewEntity.inventory.items[7][0] = new ItemStack(new Item(ItemType.LEAVES), 1);
-                    viewEntity.inventory.items[0][1] = new ItemStack(new ItemTree(), 1);
+                    try {
+                        viewEntity.inventory.items[0][0] = new ItemStack(new Item(ItemType.STONE), 1);
+                        viewEntity.inventory.items[1][0] = new ItemStack(new Item(ItemType.WALL), 1);
+                        viewEntity.inventory.items[2][0] = new ItemStack(new Item(ItemType.DIRT), 1);
+                        viewEntity.inventory.items[3][0] = new ItemStack(new Item(ItemType.GRASS), 1);
+                        viewEntity.inventory.items[4][0] = new ItemStack(new Item(ItemType.LADDER), 1);
+                        viewEntity.inventory.items[5][0] = new ItemStack(new Item(ItemType.PLANKS), 1);
+                        viewEntity.inventory.items[6][0] = new ItemStack(new Item(ItemType.LOG), 1);
+                        viewEntity.inventory.items[7][0] = new ItemStack(new Item(ItemType.LEAVES), 1);
+                        viewEntity.inventory.items[0][1] = new ItemStack(new ItemTree(), 1);
     
-                    int mouseWheelPos = Mouse.getMouseWheelPos();
-                    int scroll = -(mouseWheelPos - lastMouseWheelPos);
-                    viewEntity.inventory.roll(!Keyboard.isKeyDown(KeyEvent.VK_SHIFT) ? scroll : 0, Keyboard.isKeyDown(KeyEvent.VK_SHIFT) ? scroll : 0);
-                    lastMouseWheelPos = mouseWheelPos;
-                    viewEntity.noGravity = false;
+                        int mouseWheelPos = Mouse.getMouseWheelPos();
+                        int scroll = -(mouseWheelPos - lastMouseWheelPos);
+                        viewEntity.inventory.roll(!Keyboard.isKeyDown(KeyEvent.VK_SHIFT) ? scroll : 0, Keyboard.isKeyDown(KeyEvent.VK_SHIFT) ? scroll : 0);
+                        lastMouseWheelPos = mouseWheelPos;
+                        viewEntity.noGravity = false;
     
-                    if (Keyboard.isKeyDown(KeyEvent.VK_A)) {
-                        if (world.getBlock(viewEntity.pos.getX(), viewEntity.pos.getY()).type.climbable)
-                            viewEntity.motion.add(-0.02 * (viewEntity.noGravity ? 3 : 1), 0);
+                        if (Keyboard.isKeyDown(KeyEvent.VK_A)) {
+                            if (world.getBlock(viewEntity.pos.getX(), viewEntity.pos.getY()).type.climbable)
+                                viewEntity.motion.add(-0.02 * (viewEntity.noGravity ? 3 : 1), 0);
+                            else
+                                viewEntity.motion.add(-0.05 * (viewEntity.noGravity ? 3 : 1), 0);
+                        }
+                        if (Keyboard.isKeyDown(KeyEvent.VK_D)) {
+                            if (world.getBlock(viewEntity.pos.getX(), viewEntity.pos.getY()).type.climbable)
+                                viewEntity.motion.add(0.02 * (viewEntity.noGravity ? 3 : 1), 0);
+                            else
+                                viewEntity.motion.add(0.05 * (viewEntity.noGravity ? 3 : 1), 0);
+                        }
+                        if (Keyboard.isKeyDown(KeyEvent.VK_SPACE)) {
+                            viewEntity.jump();
+                        }
+                        if (Keyboard.isKeyDown(KeyEvent.VK_W)) {
+                            try {
+                                if (world.getBlock(viewEntity.pos.getX(), viewEntity.pos.getY()).type.climbable || viewEntity.noGravity) {
+                                    viewEntity.motion.add(0, 0.05);
+                                }
+                            }
+                            catch (ArrayIndexOutOfBoundsException ignored) {
+                            }
+                        }
+                        if (Keyboard.isKeyDown(KeyEvent.VK_S)) {
+                            try {
+                                if (world.getBlock(viewEntity.pos.getX(), viewEntity.pos.getY()).type.climbable || viewEntity.noGravity) {
+                                    viewEntity.motion.add(0, -0.05);
+                                }
+                            }
+                            catch (ArrayIndexOutOfBoundsException ignored) {
+                            }
+                        }
+                        if (Keyboard.isKeyDown(KeyEvent.VK_G)) {
+                            new StructureTree().generate(world.chunks, lookingAtBlock, false);
+                        }
+                        if (Mouse.isKeyDown(1)) {
+                            try {
+                                Vector2d vec = lookingAt.clone().add(viewEntity.pos.clone().add(0, 0.8).negate());
+                                if (Math.sqrt(vec.getX() * vec.getX() + vec.getY() * vec.getY()) < 5) {
+                                    world.setBlock(lookingAtBlock.getX(), lookingAtBlock.getY(), BlockType.AIR);
+                                    if (((ClientPlayer) viewEntity).clientConnection != null)
+                                        ((ClientPlayer) viewEntity).clientConnection.writeBlockUpdate(lookingAtBlock);
+                                }
+                            }
+                            catch (ArrayIndexOutOfBoundsException | PBIC.PBICException.PBICWriteException ignored) {
+                            }
+                        }
+                        if (Mouse.isKeyDown(3)) {
+                            try {
+                                Vector2d vec = lookingAt.clone().add(viewEntity.pos.clone().add(0, 0.8).negate());
+                                if (Math.sqrt(vec.getX() * vec.getX() + vec.getY() * vec.getY()) < 5) {
+                                    viewEntity.inventory.place(lookingAtBlock, world);
+                                    if (((ClientPlayer) viewEntity).clientConnection != null)
+                                        ((ClientPlayer) viewEntity).clientConnection.writeBlockUpdate(lookingAtBlock);
+                                }
+                            }
+                            catch (ArrayIndexOutOfBoundsException | PBIC.PBICException.PBICWriteException ignored) {
+                            }
+                        }
+    
+    
+                        if (((EntityPlayer) viewEntity).clientConnection != null) {
+                            try {
+                                if (!viewEntity.motion.toString().equals(new Vector2d(0, 0).toString()))
+                                    ((ClientPlayer) viewEntity).clientConnection.writeMotion();
+                                viewEntity.sendPos++;
+                                if (viewEntity.sendPos >= 50) {
+                                    ((ClientPlayer) viewEntity).clientConnection.writePosition();
+                                }
+                                viewEntity.tickMotion();
+                            }
+                            catch (PBIC.PBICException.PBICWriteException e) {
+                                e.printStackTrace();
+                            }
+                        }
                         else
-                            viewEntity.motion.add(-0.05 * (viewEntity.noGravity ? 3 : 1), 0);
-                    }
-                    if (Keyboard.isKeyDown(KeyEvent.VK_D)) {
-                        if (world.getBlock(viewEntity.pos.getX(), viewEntity.pos.getY()).type.climbable)
-                            viewEntity.motion.add(0.02 * (viewEntity.noGravity ? 3 : 1), 0);
-                        else
-                            viewEntity.motion.add(0.05 * (viewEntity.noGravity ? 3 : 1), 0);
-                    }
-                    if (Keyboard.isKeyDown(KeyEvent.VK_SPACE)) {
-                        viewEntity.jump();
-                    }
-                    if (Keyboard.isKeyDown(KeyEvent.VK_W)) {
-                        try {
-                            if (world.getBlock(viewEntity.pos.getX(), viewEntity.pos.getY()).type.climbable || viewEntity.noGravity) {
-                                viewEntity.motion.add(0, 0.05);
+                            for (int i = 0; i < world.entities.size(); i++) {
+                                world.entities.get(i).tickMotion();
                             }
-                        }
-                        catch (ArrayIndexOutOfBoundsException ignored) {
-                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    if (Keyboard.isKeyDown(KeyEvent.VK_S)) {
-                        try {
-                            if (world.getBlock(viewEntity.pos.getX(), viewEntity.pos.getY()).type.climbable || viewEntity.noGravity) {
-                                viewEntity.motion.add(0, -0.05);
-                            }
-                        }
-                        catch (ArrayIndexOutOfBoundsException ignored) {
-                        }
-                    }
-                    if (Keyboard.isKeyDown(KeyEvent.VK_G)) {
-                        new StructureTree().generate(world.chunks, lookingAtBlock, false);
-                    }
-                    if (Mouse.isKeyDown(1)) {
-                        try {
-                            Vector2d vec = lookingAt.clone().add(viewEntity.pos.clone().add(0, 0.8).negate());
-                            if (Math.sqrt(vec.getX() * vec.getX() + vec.getY() * vec.getY()) < 5) {
-                                world.setBlock(lookingAtBlock.getX(), lookingAtBlock.getY(), BlockType.AIR);
-                                if(((ClientPlayer) viewEntity).clientConnection != null)
-                                    ((ClientPlayer) viewEntity).clientConnection.writeBlockUpdate(lookingAtBlock);
-                            }
-                        }
-                        catch (ArrayIndexOutOfBoundsException | PBIC.PBICException.PBICWriteException ignored) {
-                        }
-                    }
-                    if (Mouse.isKeyDown(3)) {
-                        try {
-                            Vector2d vec = lookingAt.clone().add(viewEntity.pos.clone().add(0, 0.8).negate());
-                            if (Math.sqrt(vec.getX() * vec.getX() + vec.getY() * vec.getY()) < 5) {
-                                viewEntity.inventory.place(lookingAtBlock, world);
-                                if(((ClientPlayer) viewEntity).clientConnection != null)
-                                    ((ClientPlayer) viewEntity).clientConnection.writeBlockUpdate(lookingAtBlock);
-                            }
-                        }
-                        catch (ArrayIndexOutOfBoundsException | PBIC.PBICException.PBICWriteException ignored) {
-                        }
-                    }
-                    
-    
-                    if (((EntityPlayer) viewEntity).clientConnection != null) {
-                        try {
-                            if(!viewEntity.motion.toString().equals(new Vector2d(0,0).toString()))
-                                ((ClientPlayer) viewEntity).clientConnection.writeMotion();
-                            viewEntity.sendPos++;
-                            if(viewEntity.sendPos >= 50) {
-                                ((ClientPlayer) viewEntity).clientConnection.writePosition();
-                            }
-                            viewEntity.tickMotion();
-                        }
-                        catch (PBIC.PBICException.PBICWriteException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    else
-                        for (int i = 0; i < world.entities.size(); i++) {
-                            world.entities.get(i).tickMotion();
-                        }
-                    
                 }
     
 

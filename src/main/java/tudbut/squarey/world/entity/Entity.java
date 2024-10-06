@@ -1,6 +1,7 @@
 package tudbut.squarey.world.entity;
 
 import de.tudbut.type.Vector2d;
+import tudbut.obj.Vector2i;
 import tudbut.rendering.Maths2D;
 import tudbut.rendering.Rectangle2D;
 import tudbut.squarey.item.Inventory;
@@ -52,12 +53,13 @@ public class Entity {
         return hitsBlock(pos, world);
     }
     
-    public void jump() {
-        if(jumpTimer == 0 && hitsGround()) {
-            jumpTimer = 15;
-            motion.add(0, 1);
-        }
+    /*public boolean hitsGround() {
+        return cYn(pos, world);
     }
+    
+     */
+    
+    
     
     public static boolean hitsGround(Vector2d pos, World world) {
         if(world.getBlock((int) pos.getX(), (int) ((pos.getY()) + 1)).type.solid) {
@@ -187,12 +189,95 @@ public class Entity {
         return b;
     }
     
+    public void jump() {
+        if(jumpTimer == 0 && hitsGround()) {
+            jumpTimer = 15;
+            motion.add(0, 1);
+        }
+    }
+    
+    public static boolean collides(Vector2d pos, Rectangle2D hitBox) {
+        return Maths2D.collides(getHitbox(pos), hitBox);
+    }
+    
+    public static boolean collides(Vector2d pos, Vector2i block) {
+        return Maths2D.collides(getHitbox(pos), new Rectangle2D(new Vector2d(block.getX(), block.getY()), new Vector2d(1,1)));
+    }
+    
+    public static boolean cXp(Vector2d pos, World world) {
+        boolean b = false;
+        Vector2i blockPos = new Vector2i((int) pos.getX() + 1, (int) (pos.getY() - 1));
+        for (int y = 0; y < 3; y++) {
+            if(world.getBlock(blockPos.getX(), blockPos.getY()).type.solid && collides(pos, blockPos)) {
+                b = true;
+                break;
+            }
+            blockPos.add(new Vector2i(0, 1));
+        }
+        return b;
+    }
+    
+    public static boolean cXn(Vector2d pos, World world) {
+        boolean b = false;
+        Vector2i blockPos = new Vector2i((int) pos.getX() - 1, (int) (pos.getY() - 1));
+        for (int y = 0; y < 3; y++) {
+            if(world.getBlock(blockPos.getX(), blockPos.getY()).type.solid && collides(pos, blockPos)) {
+                b = true;
+                break;
+            }
+            blockPos.add(new Vector2i(0, 1));
+        }
+        return b;
+    }
+    
+    public static boolean cYp(Vector2d pos, World world) {
+        boolean b = false;
+        Vector2i blockPos = new Vector2i((int) pos.getX() - 1, (int) (pos.getY() + 1));
+        for (int y = 0; y < 3; y++) {
+            if(world.getBlock(blockPos.getX(), blockPos.getY()).type.solid && collides(pos, blockPos)) {
+                b = true;
+                break;
+            }
+            blockPos.add(new Vector2i(1, 0));
+        }
+        return b;
+    }
+    
+    public static boolean cYn(Vector2d pos, World world) {
+        boolean b = false;
+        Vector2i blockPos = new Vector2i((int) pos.getX() - 1, (int) (pos.getY()));
+        for (int x = 0; x < 3; x++) {
+            if(world.getBlock(blockPos.getX() + x, blockPos.getY()).type.solid && collides(pos, blockPos)) {
+                b = true;
+                break;
+            }
+        }
+        return b;
+    }
+    
     public Rectangle2D getHitbox() {
         return getHitbox(pos);
     }
     
     public static Rectangle2D getHitbox(Vector2d pos) {
         return new Rectangle2D(new Vector2d(pos.getX() - 0.25, pos.getY() + 1), new Vector2d(0.5,1));
+    }
+    
+    public Vector2i getRealPos() {
+        double x;
+        double y;
+        
+        if(pos.getX() < 0)
+            x = (Math.ceil(pos.getX()) - 0.5);
+        else
+            x = (Math.floor(pos.getX()) + 0.5);
+        
+        if(pos.getY() < 0)
+            y = (Math.ceil(pos.getY()) - 0.5);
+        else
+            y = (Math.floor(pos.getY()) + 0.5);
+        
+        return new Vector2i((int) Math.floor(x), (int) Math.floor(y));
     }
     
     public void tickMotion() {
@@ -214,7 +299,7 @@ public class Entity {
             }
             else {
                 pos = this.pos.clone();
-                motion.set(motion.multiply(0.01));
+                motion.multiply(0.01);
                 while (!hitsBlock(pos.clone().add(0, 0), world))
                     pos.add(motion);
                 this.pos.set(pos);
@@ -231,6 +316,135 @@ public class Entity {
             }
         }
     }
+    /*
+    public static boolean hitsGround(Vector2d pos, World world) {
+        boolean[] rel;
+        boolean b;
+        boolean[] var4;
+        int var5;
+        int var6;
+        boolean value;
+        if (world.getBlock((int)pos.getX(), (int)(pos.getY() + 1.0D)).type.solid) {
+            rel = Maths2D.getRelation(getHitbox(pos), new Rectangle2D(new Vector2d((double)((int)pos.getX()), (double)((int)(pos.getY() - 0.5D))), new Vector2d(1.0D, 1.0D)));
+            b = false;
+            var4 = rel;
+            var5 = rel.length;
+            
+            for(var6 = 0; var6 < var5; ++var6) {
+                value = var4[var6];
+                if (value) {
+                    b = true;
+                    break;
+                }
+            }
+            
+            return b;
+        } else if (world.getBlock((int)(pos.getX() + 0.23D), (int)(pos.getY() + 1.0D)).type.solid) {
+            rel = Maths2D.getRelation(getHitbox(pos), new Rectangle2D(new Vector2d((double)((int)pos.getX()), (double)((int)(pos.getY() - 0.5D))), new Vector2d(1.0D, 1.0D)));
+            b = false;
+            var4 = rel;
+            var5 = rel.length;
+            
+            for(var6 = 0; var6 < var5; ++var6) {
+                value = var4[var6];
+                if (value) {
+                    b = true;
+                    break;
+                }
+            }
+            
+            return b;
+        } else if (!world.getBlock((int)(pos.getX() - 0.25D), (int)(pos.getY() + 1.0D)).type.solid) {
+            return false;
+        } else {
+            rel = Maths2D.getRelation(getHitbox(pos), new Rectangle2D(new Vector2d((double)((int)pos.getX()), (double)((int)(pos.getY() - 0.5D))), new Vector2d(1.0D, 1.0D)));
+            b = false;
+            var4 = rel;
+            var5 = rel.length;
+            
+            for(var6 = 0; var6 < var5; ++var6) {
+                value = var4[var6];
+                if (value) {
+                    b = true;
+                    break;
+                }
+            }
+            
+            return b;
+        }
+    }
+    
+    public static boolean hitsBlock(Vector2d pos, World world) {
+        boolean[] rel;
+        boolean b;
+        boolean[] var4;
+        int var5;
+        int var6;
+        boolean value;
+        if (world.getBlock((int)pos.getX(), (int)(pos.getY() + 1.0D)).type.solid) {
+            rel = Maths2D.getRelation(getHitbox(pos), new Rectangle2D(new Vector2d((double)((int)pos.getX()), (double)((int)(pos.getY() - 0.5D))), new Vector2d(1.0D, 1.0D)));
+            b = false;
+            var4 = rel;
+            var5 = rel.length;
+            
+            for(var6 = 0; var6 < var5; ++var6) {
+                value = var4[var6];
+                if (value) {
+                    b = true;
+                    break;
+                }
+            }
+            
+            return b;
+        } else if (world.getBlock((int)pos.getX(), (int)(pos.getY() + 3.0D)).type.solid) {
+            rel = Maths2D.getRelation(getHitbox(pos), new Rectangle2D(new Vector2d((double)((int)pos.getX()), (double)((int)(pos.getY() + 2.5D))), new Vector2d(1.0D, 1.0D)));
+            b = false;
+            var4 = rel;
+            var5 = rel.length;
+            
+            for(var6 = 0; var6 < var5; ++var6) {
+                value = var4[var6];
+                if (value) {
+                    b = true;
+                    break;
+                }
+            }
+            
+            return b;
+        } else if (world.getBlock((int)(pos.getX() + 0.23D), (int)(pos.getY() + 1.0D)).type.solid) {
+            rel = Maths2D.getRelation(getHitbox(pos), new Rectangle2D(new Vector2d((double)((int)pos.getX()), (double)((int)(pos.getY() - 0.5D))), new Vector2d(1.0D, 1.0D)));
+            b = false;
+            var4 = rel;
+            var5 = rel.length;
+            
+            for(var6 = 0; var6 < var5; ++var6) {
+                value = var4[var6];
+                if (value) {
+                    b = true;
+                    break;
+                }
+            }
+            
+            return b;
+        } else if (!world.getBlock((int)(pos.getX() - 0.25D), (int)(pos.getY() + 1.0D)).type.solid) {
+            return false;
+        } else {
+            rel = Maths2D.getRelation(getHitbox(pos), new Rectangle2D(new Vector2d((double)((int)pos.getX()), (double)((int)(pos.getY() - 0.5D))), new Vector2d(1.0D, 1.0D)));
+            b = false;
+            var4 = rel;
+            var5 = rel.length;
+            
+            for(var6 = 0; var6 < var5; ++var6) {
+                value = var4[var6];
+                if (value) {
+                    b = true;
+                    break;
+                }
+            }
+            
+            return b;
+        }
+    }*/
     
     public void kill() {
         world.entities.remove(this);

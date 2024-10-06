@@ -20,7 +20,7 @@ public enum EntityType {
     
     EntityType(String texture) {
         try {
-            this.texture = Maths2D.distortImage(ImageIO.read(Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("entities/" + texture + ".png"))), 8, 16, 1);
+            this.texture = Maths2D.distortImage(ImageIO.read(Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("entities/" + texture + ".png"))), 8, (int) Math.ceil(16 * 0.8), 1);
         }
         catch (Exception ignore) {
         }

@@ -29,7 +29,7 @@ public class ServerConnection {
                     PBIC.Packet packet = connection.readPacket();
                     String s = packet.getContent();
                     char[] idString = s.substring(0, 2).toCharArray();
-                    int id = idString[1] + (idString[0] << 8);
+                    int id = idString[1] + (idString[0] << 16);
                     String content = s.substring(2);
                     
                     if(id == 0) {

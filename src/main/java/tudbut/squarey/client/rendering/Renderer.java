@@ -14,6 +14,7 @@ public class Renderer {
         if(block.getTexture() != null)
             ag.drawImage(pos.getX(), pos.getY(), block.getTexture());
     }
+    
     public static void render(AdaptedGraphics ag, Entity entity, Vector2i offset) {
         Vector2d pos = entity.getHitbox().getPos().multiply(16).multiply(1, -1).add(offset.getX(), offset.getY());
         

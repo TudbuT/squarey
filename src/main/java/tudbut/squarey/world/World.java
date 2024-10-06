@@ -35,7 +35,17 @@ public class World {
     }
     
     public Block getBlock(double x, double y) {
-        return getBlock((int) (x - 0.1), (int) (y + 1.5));
+        if(x < 0)
+            x = (Math.ceil(x) - 0.5);
+        else
+            x = (Math.floor(x) + 0.5);
+    
+        if(y < 0)
+            y = (Math.ceil(y) - 0.5);
+        else
+            y = (Math.floor(y) + 0.5);
+    
+        return getBlock((int) Math.floor(x), (int) Math.floor(y));
     }
     
     public void setBlock(int x, int y, Block block) {

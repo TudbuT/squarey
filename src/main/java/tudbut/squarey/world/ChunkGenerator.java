@@ -53,7 +53,7 @@ public class ChunkGenerator {
         for (int x = 0; x < carveMap.length; x++) {
             Chunk chunk = chunks[x / 16];
             for (int y = 1; y < carveMap[x].length; y++) {
-                if(carveMap[x][y] >= 1.1) {
+                if(carveMap[x][y] >= 1.08) {
                     chunk.blocks[x % 16][y] = new Block(BlockType.AIR, new Vector2i(x, y));
                 }
             }
